@@ -139,6 +139,25 @@
     }
     .btn-share:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
 
+    /* 토스트 */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a1a;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
     /* 앱 연동 버튼 */
     .link-buttons {
       display: flex;
@@ -210,6 +229,8 @@
       </div>
     </div>
   </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
     const foodList = [
@@ -300,13 +321,42 @@
       const emoji = foodEmoji[currentFood] || '🍽️';
       const text = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + ' 나옴ㅋㅋ 너도 해봐';
       const url = window.location.href;
+      const shareText = text + '\n' + url;
 
-      if (navigator.share) {
+      const isKakao = /KAKAOTALK/i.test(navigator.userAgent);
+
+      if (!isKakao && navigator.share) {
         navigator.share({ title: '오늘 뭐 먹지?', text: text, url: url })
           .catch(function() {});
       } else {
-        alert('이 브라우저는 공유 기능을 지원하지 않아요.\n모바일에서 접속해보세요!');
+        // 카카오톡 인앱 브라우저 또는 미지원 — 클립보드 복사
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareText).then(function() {
+            showToast('링크 복사됐어요! 카톡에 붙여넣기 하세요 😊');
+          }).catch(function() { fallbackCopy(shareText); });
+        } else {
+          fallbackCopy(shareText);
+        }
       }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('링크 복사됐어요! 카톡에 붙여넣기 하세요 😊');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function() { toast.classList.remove('show'); }, 2800);
     }
 
     function openCoupangEats() {
