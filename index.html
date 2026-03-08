@@ -219,6 +219,57 @@
       line-height: 1;
       padding: 0;
     }
+    .tags-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .tags-count { font-size: 0.8rem; color: #bbb; }
+    .delete-all-btn {
+      background: none;
+      border: none;
+      font-size: 0.8rem;
+      color: #ccc;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .delete-all-btn:hover { color: #e53935; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .delete-confirm {
+      background: #fff5f5;
+      border: 1.5px solid #ffcdd2;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: slideDown 0.2s ease;
+    }
+    .delete-confirm-msg { font-size: 0.88rem; color: #c62828; font-weight: 600; text-align: left; }
+    .delete-confirm-btns { display: flex; gap: 8px; flex-shrink: 0; }
+    .dc-cancel, .dc-delete {
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .dc-cancel { background: #eee; color: #555; }
+    .dc-cancel:hover { background: #ddd; }
+    .dc-delete { background: #e53935; color: #fff; }
+    .dc-delete:hover { background: #c62828; }
+
     .go-spin-btn {
       width: 100%;
       background: linear-gradient(135deg, #845ef7, #5c7cfa);
@@ -326,7 +377,21 @@
              onkeydown="if(event.key==='Enter')addItem()">
       <button class="add-btn" onclick="addItem()">추가</button>
     </div>
+    <div class="tags-header" id="tagsHeader" style="display:none">
+      <span class="tags-count" id="tagsCount"></span>
+      <button class="delete-all-btn" onclick="askDeleteAll()">🗑 전체삭제</button>
+    </div>
     <div class="tags-wrap" id="tagsWrap"></div>
+
+    <!-- 전체삭제 확인 -->
+    <div class="delete-confirm" id="deleteConfirm" style="display:none">
+      <span class="delete-confirm-msg">정말 모두 삭제할까요?</span>
+      <div class="delete-confirm-btns">
+        <button class="dc-cancel" onclick="cancelDeleteAll()">취소</button>
+        <button class="dc-delete" onclick="confirmDeleteAll()">삭제</button>
+      </div>
+    </div>
+
     <button class="go-spin-btn" id="goSpinBtn" disabled onclick="showWheelScreen()">🎡 룰렛 돌리기</button>
   </div>
 
@@ -481,10 +546,29 @@
   }
 
   function renderTags() {
+    const n = customItems.length;
     document.getElementById('tagsWrap').innerHTML = customItems.map((item, i) =>
       `<span class="tag">${item}<button class="tag-x" onclick="removeItem(${i})">×</button></span>`
     ).join('');
-    document.getElementById('goSpinBtn').disabled = customItems.length < 2;
+    document.getElementById('goSpinBtn').disabled = n < 2;
+    document.getElementById('tagsHeader').style.display = n > 0 ? 'flex' : 'none';
+    document.getElementById('tagsCount').textContent = '총 ' + n + '개';
+    // 아이템 없으면 확인창도 닫기
+    if (n === 0) document.getElementById('deleteConfirm').style.display = 'none';
+  }
+
+  function askDeleteAll() {
+    document.getElementById('deleteConfirm').style.display = 'flex';
+  }
+
+  function cancelDeleteAll() {
+    document.getElementById('deleteConfirm').style.display = 'none';
+  }
+
+  function confirmDeleteAll() {
+    customItems = [];
+    document.getElementById('deleteConfirm').style.display = 'none';
+    renderTags();
   }
 
   /* ═══════════ 캔버스 룰렛 ═══════════ */
