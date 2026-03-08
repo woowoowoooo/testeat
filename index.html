@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>오늘 뭐 먹지?</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
@@ -22,12 +18,12 @@
     }
 
     .container {
-      background: #ffffff;
+      background: #fff;
       border-radius: 24px;
       padding: 48px 36px;
       max-width: 420px;
       width: 100%;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.1);
       text-align: center;
     }
 
@@ -45,6 +41,7 @@
       margin-bottom: 40px;
     }
 
+    /* 추천 버튼 */
     .recommend-btn {
       background: linear-gradient(135deg, #ff6b35, #ff4500);
       color: #fff;
@@ -54,34 +51,26 @@
       font-size: 1.2rem;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+      box-shadow: 0 4px 20px rgba(255,107,53,0.4);
       letter-spacing: -0.5px;
     }
+    .recommend-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,0.5); }
+    .recommend-btn:active { transform: translateY(0); }
+    .recommend-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    .recommend-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(255, 107, 53, 0.5);
-    }
-
-    .recommend-btn:active {
-      transform: translateY(0px);
-    }
-
+    /* 결과 영역 */
     .result-section {
       margin-top: 40px;
       display: none;
-      animation: fadeIn 0.4s ease;
     }
-
-    .result-section.visible {
-      display: block;
-    }
+    .result-section.visible { display: block; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    .result-section.animate { animation: fadeIn 0.4s ease; }
 
     .result-label {
       font-size: 0.9rem;
@@ -89,21 +78,103 @@
       margin-bottom: 8px;
     }
 
+    /* 룰렛 중 흔들리는 효과 */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-4px); }
+      75%      { transform: translateX(4px); }
+    }
     .result-food {
       font-size: 3rem;
       font-weight: 900;
       color: #ff4500;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       letter-spacing: -1px;
       line-height: 1.1;
+      min-height: 3.6rem;
+      transition: color 0.2s;
+    }
+    .result-food.spinning {
+      color: #ffaa88;
+      animation: shake 0.15s infinite;
     }
 
+    /* 다시 추첨 */
+    .retry-btn {
+      background: none;
+      border: 2px solid #ff4500;
+      color: #ff4500;
+      border-radius: 50px;
+      padding: 10px 28px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 24px;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: -0.3px;
+    }
+    .retry-btn:hover { background: #ff4500; color: #fff; }
+    .retry-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* 공유 영역 */
+    .share-section {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .share-btn {
+      flex: 1;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: -0.3px;
+    }
+    .share-btn:hover { transform: translateY(-2px); }
+
+    .btn-copy {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-copy:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+
+    .btn-share {
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .btn-share:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+
+    /* 복사 완료 토스트 */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a1a;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 앱 연동 버튼 */
     .link-buttons {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-
     .link-btn {
       display: block;
       width: 100%;
@@ -114,48 +185,31 @@
       font-weight: 700;
       text-decoration: none;
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s, box-shadow 0.15s;
       letter-spacing: -0.3px;
     }
-
-    .link-btn:hover {
-      transform: translateY(-2px);
-    }
+    .link-btn:hover { transform: translateY(-2px); }
 
     .btn-coupang {
       background: #fee500;
       color: #1a1a1a;
-      box-shadow: 0 4px 16px rgba(254, 229, 0, 0.4);
+      box-shadow: 0 4px 16px rgba(254,229,0,0.4);
     }
-
-    .btn-coupang:hover {
-      box-shadow: 0 6px 22px rgba(254, 229, 0, 0.55);
-    }
+    .btn-coupang:hover { box-shadow: 0 6px 22px rgba(254,229,0,0.55); }
 
     .btn-naver {
       background: #03c75a;
-      color: #ffffff;
-      box-shadow: 0 4px 16px rgba(3, 199, 90, 0.3);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(3,199,90,0.3);
     }
+    .btn-naver:hover { box-shadow: 0 6px 22px rgba(3,199,90,0.45); }
 
-    .btn-naver:hover {
-      box-shadow: 0 6px 22px rgba(3, 199, 90, 0.45);
-    }
-
-    .emoji-icon {
-      margin-right: 6px;
-    }
+    .emoji-icon { margin-right: 6px; }
 
     @media (max-width: 480px) {
-      .container {
-        padding: 36px 24px;
-      }
-      .title {
-        font-size: 2rem;
-      }
-      .result-food {
-        font-size: 2.6rem;
-      }
+      .container { padding: 36px 24px; }
+      .title { font-size: 2rem; }
+      .result-food { font-size: 2.6rem; }
     }
   </style>
 </head>
@@ -164,11 +218,18 @@
     <h1 class="title">오늘 뭐 먹지?</h1>
     <p class="subtitle">메뉴 고르기 귀찮을 땐 저한테 맡겨요</p>
 
-    <button class="recommend-btn" onclick="recommend()">추천 받기</button>
+    <button class="recommend-btn" id="recommendBtn" onclick="startRoulette()">추천 받기</button>
 
     <div class="result-section" id="resultSection">
       <p class="result-label">오늘의 추천 메뉴</p>
       <div class="result-food" id="resultFood"></div>
+
+      <button class="retry-btn" id="retryBtn" onclick="startRoulette()">&#x1F501; 다시 추첨</button>
+
+      <div class="share-section" id="shareSection">
+        <button class="share-btn btn-copy" onclick="copyLink()">&#x1F517; 링크 복사</button>
+        <button class="share-btn btn-share" onclick="shareResult()">&#x1F4E4; 친구에게 공유</button>
+      </div>
 
       <div class="link-buttons">
         <button class="link-btn btn-coupang" onclick="openCoupangEats()">
@@ -181,27 +242,138 @@
     </div>
   </div>
 
+  <div class="toast" id="toast">링크가 복사됐어요!</div>
+
   <script>
     const foodList = [
       '삼겹살', '치킨', '피자', '햄버거', '마라탕',
       '떡볶이', '초밥', '국밥', '돈까스', '쌀국수',
-      '파스타', '라멘'
+      '파스타', '라멘', '라면', '김밥', '족발',
+      '보쌈', '칼국수', '짜장면', '짬뽕', '감자탕',
+      '부대찌개', '된장찌개', '비빔밥', '냉면', '삼계탕',
+      '오므라이스', '카레', '쭈꾸미볶음', '제육볶음', '순대국밥'
     ];
 
+    const foodEmoji = {
+      '삼겹살':'🥓','치킨':'🍗','피자':'🍕','햄버거':'🍔','마라탕':'🍜',
+      '떡볶이':'🌶️','초밥':'🍣','국밥':'🍲','돈까스':'🍱','쌀국수':'🍜',
+      '파스타':'🍝','라멘':'🍜','라면':'🍜','김밥':'🍙','족발':'🍖',
+      '보쌈':'🥬','칼국수':'🍜','짜장면':'🍜','짬뽕':'🍜','감자탕':'🍲',
+      '부대찌개':'🍲','된장찌개':'🍲','비빔밥':'🥗','냉면':'🍜','삼계탕':'🍗',
+      '오므라이스':'🍳','카레':'🍛','쭈꾸미볶음':'🐙','제육볶음':'🥩','순대국밥':'🍲'
+    };
+
     let currentFood = '';
+    let lastFood = '';
+    let isSpinning = false;
 
-    function recommend() {
-      currentFood = foodList[Math.floor(Math.random() * foodList.length)];
-      document.getElementById('resultFood').textContent = currentFood;
+    function pickFood() {
+      const pool = foodList.filter(f => f !== lastFood);
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
 
-      const encodedFood = encodeURIComponent(currentFood);
-      document.getElementById('naverLink').href =
-        'https://map.naver.com/v5/search/' + encodedFood;
+    function startRoulette() {
+      if (isSpinning) return;
+      isSpinning = true;
 
+      const btn = document.getElementById('recommendBtn');
+      const retryBtn = document.getElementById('retryBtn');
+      const foodEl = document.getElementById('resultFood');
+      const shareSection = document.getElementById('shareSection');
+
+      btn.disabled = true;
+      if (retryBtn) retryBtn.disabled = true;
+      shareSection.style.visibility = 'hidden';
+
+      // 결과 영역 바로 보여주고 룰렛 시작
       const resultSection = document.getElementById('resultSection');
-      resultSection.classList.remove('visible');
-      void resultSection.offsetWidth;
+      resultSection.classList.remove('animate');
       resultSection.classList.add('visible');
+      foodEl.classList.add('spinning');
+
+      const finalFood = pickFood();
+      let count = 0;
+      const totalSpins = 14;
+      let delay = 70;
+
+      function spin() {
+        // 최종 직전 2번은 파이널 음식과 인접한 것들로 느리게
+        const pool = foodList.filter(f => f !== finalFood);
+        foodEl.textContent = pool[Math.floor(Math.random() * pool.length)];
+        count++;
+        delay = Math.min(delay * 1.18, 320);
+
+        if (count < totalSpins) {
+          setTimeout(spin, delay);
+        } else {
+          // 최종 결정
+          foodEl.classList.remove('spinning');
+          foodEl.textContent = finalFood;
+          currentFood = finalFood;
+          lastFood = finalFood;
+
+          // 링크 업데이트
+          document.getElementById('naverLink').href =
+            'https://map.naver.com/v5/search/' + encodeURIComponent(finalFood);
+
+          // 페이드인 애니메이션
+          resultSection.classList.add('animate');
+
+          shareSection.style.visibility = 'visible';
+          btn.disabled = false;
+          if (retryBtn) retryBtn.disabled = false;
+          isSpinning = false;
+        }
+      }
+
+      spin();
+    }
+
+    function shareResult() {
+      if (!currentFood) return;
+      const emoji = foodEmoji[currentFood] || '🍽️';
+      const text = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + ' 나옴ㅋㅋ 너도 해봐';
+      const url = window.location.href;
+
+      if (navigator.share) {
+        navigator.share({ title: '오늘 뭐 먹지?', text: text, url: url });
+      } else {
+        copyToClipboard(text + '\n' + url);
+        showToast('공유 텍스트가 복사됐어요!');
+      }
+    }
+
+    function copyLink() {
+      const emoji = foodEmoji[currentFood] || '🍽️';
+      const text = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + ' 나옴ㅋㅋ 너도 해봐\n' + window.location.href;
+      copyToClipboard(text);
+      showToast('링크가 복사됐어요!');
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).catch(function() { fallbackCopy(text); });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function() { toast.classList.remove('show'); }, 2000);
     }
 
     function openCoupangEats() {
@@ -209,9 +381,7 @@
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
       function tryDeepLink(scheme, storeUrl) {
-        const fallback = setTimeout(function () {
-          window.location.href = storeUrl;
-        }, 1500);
+        const fallback = setTimeout(function() { window.location.href = storeUrl; }, 1500);
         document.addEventListener('visibilitychange', function handler() {
           if (document.hidden) {
             clearTimeout(fallback);
