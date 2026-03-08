@@ -123,11 +123,14 @@
 
     .link-btn {
       display: block;
+      width: 100%;
+      border: none;
       border-radius: 14px;
       padding: 16px;
       font-size: 0.95rem;
       font-weight: 700;
       text-decoration: none;
+      cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       letter-spacing: -0.3px;
     }
@@ -189,9 +192,9 @@
       <p class="location-text" id="locationText">위치 정보를 불러오는 중...</p>
 
       <div class="link-buttons">
-        <a class="link-btn btn-coupang" id="coupangLink" href="#" target="_blank" rel="noopener">
+        <button class="link-btn btn-coupang" id="coupangLink" onclick="openCoupangEats()">
           <span class="emoji-icon">&#x1F6F5;</span>쿠팡이츠에서 주문하기
-        </a>
+        </button>
         <a class="link-btn btn-naver" id="naverLink" href="#" target="_blank" rel="noopener">
           <span class="emoji-icon">&#x1F4CD;</span>네이버 지도에서 보기
         </a>
@@ -212,8 +215,6 @@
       document.getElementById('resultFood').textContent = food;
 
       const encodedFood = encodeURIComponent(food);
-      document.getElementById('coupangLink').href =
-        'https://www.coupangeats.com/search?q=' + encodedFood;
       document.getElementById('naverLink').href =
         'https://map.naver.com/v5/search/' + encodedFood;
 
@@ -223,6 +224,32 @@
       resultSection.classList.add('visible');
 
       requestLocation();
+    }
+
+    function openCoupangEats() {
+      const food = document.getElementById('resultFood').textContent;
+      if (!food) return;
+      const encoded = encodeURIComponent(food);
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isAndroid) {
+        // Android: intent URL — 앱 없으면 플레이스토어로 폴백
+        window.location.href =
+          'intent://search?keyword=' + encoded +
+          '#Intent;scheme=coupangeats;package=com.coupang.eats;' +
+          'S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.coupang.eats;end';
+      } else if (isIOS) {
+        // iOS: 앱 스킴 시도 후 1.5초 내 반응 없으면 앱스토어로 이동
+        const fallback = setTimeout(function () {
+          window.location.href = 'https://apps.apple.com/kr/app/id1466980186';
+        }, 1500);
+        window.addEventListener('blur', function () { clearTimeout(fallback); }, { once: true });
+        window.location.href = 'coupangeats://search?keyword=' + encoded;
+      } else {
+        // 데스크탑은 웹으로 폴백
+        window.open('https://www.coupangeats.com/search?q=' + encoded, '_blank');
+      }
     }
 
     function requestLocation() {
