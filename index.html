@@ -3,9 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>오늘 뭐 먹지?</title>
+
+  <!-- SEO -->
+  <title>오늘 뭐 먹지? - 랜덤 메뉴 추천 & 나만의 룰렛</title>
+  <meta name="description" content="오늘 점심 저녁 메뉴 고르기 고민될 때! 랜덤 메뉴 추천과 나만의 룰렛으로 오늘 뭐 먹을지 쉽고 재미있게 결정하세요. 쿠팡이츠·배달의민족 바로 연결." />
+  <meta name="keywords" content="오늘 뭐 먹지, 메뉴 추천, 랜덤 메뉴, 점심 메뉴, 저녁 메뉴, 음식 룰렛, 메뉴 고르기, 오늘 점심" />
+  <meta name="author" content="오늘 뭐 먹지?" />
+  <link rel="canonical" href="https://woowoowoooo.github.io/testeat/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="오늘 뭐 먹지? - 랜덤 메뉴 추천 & 나만의 룰렛" />
+  <meta property="og:description" content="메뉴 고르기 귀찮을 때! 랜덤 추천 또는 나만의 룰렛으로 오늘 메뉴를 결정하세요." />
+  <meta property="og:url" content="https://woowoowoooo.github.io/testeat/" />
+  <meta property="og:locale" content="ko_KR" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="오늘 뭐 먹지? - 랜덤 메뉴 추천" />
+  <meta name="twitter:description" content="메뉴 고르기 귀찮을 때 랜덤 추천 또는 나만의 룰렛으로 결정하세요." />
+
+  <!-- Google AdSense -->
   <meta name="google-adsense-account" content="ca-pub-2391071877675576">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2391071877675576" crossorigin="anonymous"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,16 +35,24 @@
       background: linear-gradient(135deg, #fff5f0 0%, #ffe4d6 100%);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      padding: 20px 16px;
+    }
+
+    /* 전체 레이아웃 */
+    .page-wrap {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
 
     .container {
       background: #fff;
       border-radius: 24px;
       padding: 36px 24px;
-      max-width: 440px;
       width: 100%;
       box-shadow: 0 8px 40px rgba(0,0,0,0.1);
       text-align: center;
@@ -122,17 +151,28 @@
     }
     .fade-in { animation: fadeIn 0.35s ease; }
 
+    /* ── 광고 슬롯 ── */
+    .ad-slot {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      margin: 14px 0 0;
+      min-height: 90px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
     /* ── 홈 화면 ── */
     .home-title {
       font-size: 2.2rem;
       font-weight: 800;
       color: #1a1a1a;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       letter-spacing: -1px;
     }
-    .home-sub { font-size: 0.9rem; color: #aaa; margin-bottom: 28px; }
+    .home-sub { font-size: 0.9rem; color: #aaa; margin-bottom: 24px; }
 
-    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
     .mode-card {
       border-radius: 18px;
       padding: 22px 12px;
@@ -147,6 +187,53 @@
     .mode-icon  { font-size: 2rem; margin-bottom: 10px; }
     .mode-title { font-size: 1rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
     .mode-desc  { font-size: 0.74rem; opacity: 0.88; line-height: 1.45; }
+
+    /* 사용방법 섹션 */
+    .how-section {
+      border-top: 1px solid #f5f5f5;
+      padding-top: 22px;
+      text-align: left;
+    }
+    .how-section h2 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #333;
+      margin-bottom: 14px;
+    }
+    .how-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .how-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.83rem;
+      color: #555;
+      line-height: 1.5;
+    }
+    .how-list .step-num {
+      background: #ff4500;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .how-list .step-num.purple { background: #845ef7; }
+
+    /* 메뉴 카테고리 섹션 */
+    .menu-info {
+      border-top: 1px solid #f5f5f5;
+      padding-top: 18px;
+      margin-top: 18px;
+      text-align: left;
+    }
+    .menu-info h2 { font-size: 0.95rem; font-weight: 800; color: #333; margin-bottom: 10px; }
+    .menu-info p  { font-size: 0.8rem; color: #777; line-height: 1.7; }
 
     /* ── 랜덤 추천 화면 ── */
     .big-btn {
@@ -193,12 +280,30 @@
       font-family: inherit;
       white-space: nowrap;
     }
+    .tags-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .tags-count { font-size: 0.8rem; color: #bbb; }
+    .delete-all-btn {
+      background: none;
+      border: none;
+      font-size: 0.8rem;
+      color: #ccc;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .delete-all-btn:hover { color: #e53935; }
     .tags-wrap {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       min-height: 36px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       justify-content: center;
     }
     .tag {
@@ -221,25 +326,6 @@
       line-height: 1;
       padding: 0;
     }
-    .tags-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .tags-count { font-size: 0.8rem; color: #bbb; }
-    .delete-all-btn {
-      background: none;
-      border: none;
-      font-size: 0.8rem;
-      color: #ccc;
-      cursor: pointer;
-      font-family: inherit;
-      padding: 0;
-      transition: color 0.15s;
-    }
-    .delete-all-btn:hover { color: #e53935; }
-
     @keyframes slideDown {
       from { opacity: 0; transform: translateY(-6px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -271,7 +357,6 @@
     .dc-cancel:hover { background: #ddd; }
     .dc-delete { background: #e53935; color: #fff; }
     .dc-delete:hover { background: #c62828; }
-
     .go-spin-btn {
       width: 100%;
       background: linear-gradient(135deg, #845ef7, #5c7cfa);
@@ -306,7 +391,6 @@
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
     #wheelCanvas { display: block; }
-
     .wheel-spin-btn {
       width: 100%;
       background: linear-gradient(135deg, #845ef7, #5c7cfa);
@@ -323,38 +407,196 @@
       transition: transform 0.15s, opacity 0.15s;
     }
     .wheel-spin-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-    /* 룰렛 결과의 retry는 보라색 */
-    .retry-btn-purple {
-      border-color: #845ef7;
-      color: #845ef7;
-    }
+    .retry-btn-purple { border-color: #845ef7; color: #845ef7; }
     .retry-btn-purple:hover { background: #845ef7; color: #fff; }
+
+    /* ── 푸터 ── */
+    footer {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 20px 0 8px;
+      font-size: 0.75rem;
+      color: #bbb;
+      line-height: 2;
+    }
+    footer a {
+      color: #bbb;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    footer a:hover { color: #888; text-decoration: underline; }
+    footer .footer-copy { margin-top: 4px; font-size: 0.72rem; }
+
+    /* ── 개인정보처리방침 모달 ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 28px 22px 40px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .modal-box h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; color: #1a1a1a; }
+    .modal-box h3 { font-size: 0.9rem; font-weight: 700; margin: 14px 0 6px; color: #333; }
+    .modal-box p, .modal-box li {
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.75;
+    }
+    .modal-box ul { padding-left: 16px; margin-bottom: 8px; }
+    .modal-close-btn {
+      width: 100%;
+      margin-top: 20px;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    @media (max-width: 360px) {
+      .mode-title { font-size: 0.9rem; }
+      .mode-desc  { font-size: 0.7rem; }
+      .result-food { font-size: 2.4rem; }
+    }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="page-wrap">
 
-  <!-- ① 홈 -->
-  <div id="homeScreen" class="screen active">
-    <h1 class="home-title">오늘 뭐 먹지?</h1>
-    <p class="home-sub">배고프면 눌러</p>
-    <div class="mode-grid">
-      <div class="mode-card card-random" onclick="goRandomAndSpin()">
-        <div class="mode-icon">🎲</div>
-        <div class="mode-title">추천 받기</div>
-        <div class="mode-desc">메뉴 고르기 귀찮을 땐 저한테 맡겨요</div>
+  <div class="container">
+
+    <!-- ① 홈 -->
+    <div id="homeScreen" class="screen active">
+      <h1 class="home-title">오늘 뭐 먹지?</h1>
+      <p class="home-sub">메뉴 고민, 이제 저한테 맡기세요</p>
+
+      <div class="mode-grid">
+        <div class="mode-card card-random" onclick="goRandomAndSpin()">
+          <div class="mode-icon">🎲</div>
+          <div class="mode-title">추천 받기</div>
+          <div class="mode-desc">메뉴 고르기 귀찮을 땐 저한테 맡겨요</div>
+        </div>
+        <div class="mode-card card-roulette" onclick="showSetupScreen()">
+          <div class="mode-icon">🎡</div>
+          <div class="mode-title">룰렛 만들기</div>
+          <div class="mode-desc">내가 고른 메뉴들로 룰렛 돌리기</div>
+        </div>
       </div>
-      <div class="mode-card card-roulette" onclick="showSetupScreen()">
-        <div class="mode-icon">🎡</div>
-        <div class="mode-title">룰렛 만들기</div>
-        <div class="mode-desc">내가 고른 메뉴들로 룰렛 돌리기</div>
+
+      <!-- 사용방법 -->
+      <div class="how-section">
+        <h2>📖 사용 방법</h2>
+        <ul class="how-list">
+          <li>
+            <span class="step-num">1</span>
+            <span><strong>추천 받기</strong> — 버튼을 누르면 60가지 메뉴 중 랜덤으로 하나를 골라드려요. 마음에 안 들면 다시 추첨!</span>
+          </li>
+          <li>
+            <span class="step-num purple">2</span>
+            <span><strong>룰렛 만들기</strong> — 먹고 싶은 후보 메뉴를 직접 입력하고 원형 룰렛을 돌려보세요.</span>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <span>결과가 나오면 <strong>쿠팡이츠·배민</strong>으로 바로 주문하거나, <strong>네이버 지도</strong>에서 근처 식당을 찾아보세요.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 메뉴 안내 -->
+      <div class="menu-info">
+        <h2>🍽️ 추천 메뉴 목록</h2>
+        <p>삼겹살, 치킨, 피자, 햄버거, 마라탕, 떡볶이, 초밥, 국밥, 돈까스, 쌀국수, 파스타, 라멘, 라면, 김밥, 족발, 보쌈, 칼국수, 짜장면, 짬뽕, 감자탕, 부대찌개, 된장찌개, 비빔밥, 냉면, 삼계탕, 오므라이스, 카레, 쭈꾸미볶음, 제육볶음, 순대국밥, 소고기구이, 육개장, 설렁탕, 곱창, 닭갈비, 낙지볶음, 김치찌개, 순두부찌개, 해장국, 갈비탕, 갈비찜, 잡채, 만두, 샤브샤브, 스테이크, 케밥, 꼬리곰탕, 해물탕, 생선구이, 회덮밥 등 60가지 이상</p>
       </div>
     </div>
-  </div>
 
-  <!-- 광고 -->
-  <div style="margin-top:24px;min-height:50px;text-align:center;">
+    <!-- ② 랜덤 추천 -->
+    <div id="randomScreen" class="screen">
+      <button class="back-btn" onclick="showHome()">← 뒤로</button>
+      <div id="randomResult">
+        <p class="result-label">오늘의 추천 메뉴</p>
+        <div class="result-food" id="randomFood"></div>
+        <button class="retry-btn" id="randomRetryBtn" onclick="startRoulette()">🔁 다시 추첨</button>
+        <button class="share-btn" id="randomShareBtn" onclick="shareResult('random', this)" style="display:none">📤 공유하기</button>
+        <div class="link-buttons">
+          <button class="link-btn btn-coupang" onclick="openCoupangEats()">🛵 쿠팡이츠에서 주문하기</button>
+          <button class="link-btn btn-baemin" onclick="openBaemin()">🛵 배달의민족에서 주문하기</button>
+          <a class="link-btn btn-naver" id="randomNaverLink" href="#" target="_blank" rel="noopener">📍 네이버 지도에서 보기</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 룰렛 설정 -->
+    <div id="setupScreen" class="screen">
+      <button class="back-btn" onclick="showHome()">← 뒤로</button>
+      <p class="setup-title">🎡 룰렛 만들기</p>
+      <p class="setup-desc">메뉴를 2개 이상 추가하세요</p>
+      <div class="input-row">
+        <input class="menu-input" id="menuInput" type="text" placeholder="예) 치킨, 피자..." maxlength="10"
+               onkeydown="if(event.key==='Enter')addItem()">
+        <button class="add-btn" onclick="addItem()">추가</button>
+      </div>
+      <div class="tags-header" id="tagsHeader" style="display:none">
+        <span class="tags-count" id="tagsCount"></span>
+        <button class="delete-all-btn" onclick="askDeleteAll()">🗑 전체삭제</button>
+      </div>
+      <div class="tags-wrap" id="tagsWrap"></div>
+      <div class="delete-confirm" id="deleteConfirm" style="display:none">
+        <span class="delete-confirm-msg">정말 모두 삭제할까요?</span>
+        <div class="delete-confirm-btns">
+          <button class="dc-cancel" onclick="cancelDeleteAll()">취소</button>
+          <button class="dc-delete" onclick="confirmDeleteAll()">삭제</button>
+        </div>
+      </div>
+      <button class="go-spin-btn" id="goSpinBtn" disabled onclick="showWheelScreen()">🎡 룰렛 돌리기</button>
+    </div>
+
+    <!-- ④ 룰렛 휠 -->
+    <div id="wheelScreen" class="screen">
+      <button class="back-btn" onclick="showSetupScreen()">← 뒤로</button>
+      <div class="wheel-wrap">
+        <span class="wheel-pointer">▼</span>
+        <canvas id="wheelCanvas" width="280" height="280"></canvas>
+      </div><br>
+      <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()">🎡 돌리기!</button>
+      <div id="wheelResult" style="display:none">
+        <p class="result-label">당첨 메뉴!</p>
+        <div class="result-food" id="wheelFood"></div>
+        <button class="retry-btn retry-btn-purple" id="wheelRetryBtn" onclick="spinWheel()">🔁 다시 돌리기</button>
+        <button class="share-btn" onclick="shareResult('wheel', this)">📤 공유하기</button>
+        <div class="link-buttons">
+          <button class="link-btn btn-coupang" onclick="openCoupangEats()">🛵 쿠팡이츠에서 주문하기</button>
+          <button class="link-btn btn-baemin" onclick="openBaemin()">🛵 배달의민족에서 주문하기</button>
+          <a class="link-btn btn-naver" id="wheelNaverLink" href="#" target="_blank" rel="noopener">📍 네이버 지도에서 보기</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- 광고 슬롯 -->
+  <div class="ad-slot">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-2391071877675576"
@@ -364,72 +606,70 @@
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
-  <!-- ② 랜덤 추천 -->
-  <div id="randomScreen" class="screen">
-    <button class="back-btn" onclick="showHome()">← 뒤로</button>
-    <div id="randomResult">
-      <p class="result-label">오늘의 추천 메뉴</p>
-      <div class="result-food" id="randomFood"></div>
-      <button class="retry-btn" id="randomRetryBtn" onclick="startRoulette()">🔁 다시 추첨</button>
-      <button class="share-btn" id="randomShareBtn" onclick="shareResult('random', this)" style="display:none">📤 공유하기</button>
-      <div class="link-buttons">
-        <button class="link-btn btn-coupang" onclick="openCoupangEats()">🛵 쿠팡이츠에서 주문하기</button>
-        <button class="link-btn btn-baemin" onclick="openBaemin()">🛵 배달의민족에서 주문하기</button>
-        <a class="link-btn btn-naver" id="randomNaverLink" href="#" target="_blank" rel="noopener">📍 네이버 지도에서 보기</a>
-      </div>
+  <!-- 푸터 -->
+  <footer>
+    <div>
+      <a href="#" onclick="showPrivacy();return false;">개인정보처리방침</a>
+      <a href="#" onclick="showAbout();return false;">서비스 소개</a>
     </div>
+    <div class="footer-copy">© 2025 오늘 뭐 먹지? — 오늘도 맛있는 하루 되세요 🍽️</div>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<!-- 개인정보처리방침 모달 -->
+<div class="modal-overlay" id="privacyModal" onclick="if(event.target===this)closePrivacy()">
+  <div class="modal-box">
+    <h2>개인정보처리방침</h2>
+
+    <h3>1. 수집하는 개인정보</h3>
+    <p>본 서비스는 회원가입이나 별도의 개인정보를 수집하지 않습니다. 다만, 서비스 개선을 위해 아래 정보가 자동으로 수집될 수 있습니다.</p>
+    <ul>
+      <li>방문 기록, 사용 기기 정보 (Google Analytics를 통해 익명 처리됨)</li>
+      <li>광고 제공을 위한 쿠키 (Google AdSense)</li>
+    </ul>
+
+    <h3>2. Google AdSense 광고</h3>
+    <p>본 사이트는 Google AdSense를 통해 광고를 제공합니다. Google은 사용자의 관심사에 맞는 광고를 표시하기 위해 쿠키를 사용할 수 있습니다. Google의 광고 쿠키 사용에 대한 자세한 내용은 <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener" style="color:#ff4500;">Google 광고 개인정보 보호 정책</a>에서 확인하실 수 있습니다.</p>
+
+    <h3>3. 쿠키 사용</h3>
+    <p>본 서비스는 광고 최적화를 위해 제3자 쿠키(Google AdSense)를 사용합니다. 브라우저 설정에서 쿠키를 비활성화할 수 있으나, 일부 기능이 제한될 수 있습니다.</p>
+
+    <h3>4. 위치 정보</h3>
+    <p>서비스 이용 시 위치 정보를 요청할 수 있습니다. 위치 정보는 기기 내에서만 처리되며 서버로 전송되거나 저장되지 않습니다.</p>
+
+    <h3>5. 제3자 서비스 연결</h3>
+    <p>쿠팡이츠, 배달의민족, 네이버 지도 앱으로 연결 시, 해당 서비스의 개인정보처리방침이 적용됩니다.</p>
+
+    <h3>6. 문의</h3>
+    <p>개인정보 관련 문의사항은 GitHub 이슈를 통해 연락해 주세요.</p>
+
+    <button class="modal-close-btn" onclick="closePrivacy()">닫기</button>
   </div>
-
-  <!-- ③ 룰렛 설정 -->
-  <div id="setupScreen" class="screen">
-    <button class="back-btn" onclick="showHome()">← 뒤로</button>
-    <p class="setup-title">🎡 룰렛 만들기</p>
-    <p class="setup-desc">메뉴를 2개 이상 추가하세요</p>
-    <div class="input-row">
-      <input class="menu-input" id="menuInput" type="text" placeholder="예) 치킨, 피자..." maxlength="10"
-             onkeydown="if(event.key==='Enter')addItem()">
-      <button class="add-btn" onclick="addItem()">추가</button>
-    </div>
-    <div class="tags-header" id="tagsHeader" style="display:none">
-      <span class="tags-count" id="tagsCount"></span>
-      <button class="delete-all-btn" onclick="askDeleteAll()">🗑 전체삭제</button>
-    </div>
-    <div class="tags-wrap" id="tagsWrap"></div>
-
-    <!-- 전체삭제 확인 -->
-    <div class="delete-confirm" id="deleteConfirm" style="display:none">
-      <span class="delete-confirm-msg">정말 모두 삭제할까요?</span>
-      <div class="delete-confirm-btns">
-        <button class="dc-cancel" onclick="cancelDeleteAll()">취소</button>
-        <button class="dc-delete" onclick="confirmDeleteAll()">삭제</button>
-      </div>
-    </div>
-
-    <button class="go-spin-btn" id="goSpinBtn" disabled onclick="showWheelScreen()">🎡 룰렛 돌리기</button>
-  </div>
-
-  <!-- ④ 룰렛 휠 -->
-  <div id="wheelScreen" class="screen">
-    <button class="back-btn" onclick="showSetupScreen()">← 뒤로</button>
-    <div class="wheel-wrap">
-      <span class="wheel-pointer">▼</span>
-      <canvas id="wheelCanvas" width="280" height="280"></canvas>
-    </div><br>
-    <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()">🎡 돌리기!</button>
-    <div id="wheelResult" style="display:none">
-      <p class="result-label">당첨 메뉴!</p>
-      <div class="result-food" id="wheelFood"></div>
-      <button class="retry-btn retry-btn-purple" id="wheelRetryBtn" onclick="spinWheel()">🔁 다시 돌리기</button>
-      <button class="share-btn" onclick="shareResult('wheel', this)">📤 공유하기</button>
-      <div class="link-buttons">
-        <button class="link-btn btn-coupang" onclick="openCoupangEats()">🛵 쿠팡이츠에서 주문하기</button>
-        <button class="link-btn btn-baemin" onclick="openBaemin()">🛵 배달의민족에서 주문하기</button>
-        <a class="link-btn btn-naver" id="wheelNaverLink" href="#" target="_blank" rel="noopener">📍 네이버 지도에서 보기</a>
-      </div>
-    </div>
-  </div>
-
 </div>
+
+<!-- 서비스 소개 모달 -->
+<div class="modal-overlay" id="aboutModal" onclick="if(event.target===this)closeAbout()">
+  <div class="modal-box">
+    <h2>서비스 소개</h2>
+    <p style="margin-bottom:12px;">"오늘 뭐 먹지?"는 매일 반복되는 메뉴 고민을 재미있게 해결해드리는 무료 서비스입니다.</p>
+
+    <h3>주요 기능</h3>
+    <ul>
+      <li>🎲 60가지 이상의 메뉴 중 랜덤 추천</li>
+      <li>🎡 직접 입력한 메뉴로 나만의 룰렛 만들기</li>
+      <li>🛵 쿠팡이츠 · 배달의민족 앱 바로 연결</li>
+      <li>📍 네이버 지도로 근처 식당 검색</li>
+      <li>📤 결과 공유 기능</li>
+    </ul>
+
+    <h3>버전 정보</h3>
+    <p>v1.0 · 2025년 제작</p>
+
+    <button class="modal-close-btn" onclick="closeAbout()">닫기</button>
+  </div>
+</div>
+
 <script>
   /* ═══════════ 상수 ═══════════ */
   const FOOD_LIST = [
@@ -461,7 +701,6 @@
   let randomCurrentFood = '';
   let randomLastFood = '';
   let isRandomSpinning = false;
-
   let customItems = [];
   let wheelCurrentFood = '';
   let wheelRotation = 0;
@@ -470,31 +709,16 @@
   /* ═══════════ 화면 전환 ═══════════ */
   const SCREENS = ['homeScreen','randomScreen','setupScreen','wheelScreen'];
   function showScreen(id) {
-    SCREENS.forEach(s => {
-      document.getElementById(s).classList.toggle('active', s === id);
-    });
+    SCREENS.forEach(s => document.getElementById(s).classList.toggle('active', s === id));
   }
-
-  function showHome() { showScreen('homeScreen'); }
-
-  function showRandomScreen() {
-    isRandomSpinning = false;
-    showScreen('randomScreen');
-  }
-
-  function goRandomAndSpin() {
-    showRandomScreen();
-    startRoulette();
-  }
-
+  function showHome()        { showScreen('homeScreen'); }
   function showSetupScreen() { showScreen('setupScreen'); }
-
+  function showRandomScreen() { isRandomSpinning = false; showScreen('randomScreen'); }
+  function goRandomAndSpin() { showRandomScreen(); startRoulette(); }
   function showWheelScreen() {
     document.getElementById('wheelResult').style.display = 'none';
     document.getElementById('wheelSpinBtn').disabled = false;
-    wheelCurrentFood = '';
-    wheelRotation = 0;
-    isWheelSpinning = false;
+    wheelCurrentFood = ''; wheelRotation = 0; isWheelSpinning = false;
     showScreen('wheelScreen');
     drawWheel();
   }
@@ -504,22 +728,17 @@
     const pool = FOOD_LIST.filter(f => f !== randomLastFood);
     return pool[Math.floor(Math.random() * pool.length)];
   }
-
   function startRoulette() {
     if (isRandomSpinning) return;
     isRandomSpinning = true;
-
     const retryBtn = document.getElementById('randomRetryBtn');
     const shareBtn = document.getElementById('randomShareBtn');
     const foodEl   = document.getElementById('randomFood');
-
     retryBtn.disabled = true;
     shareBtn.style.display = 'none';
     foodEl.classList.add('spinning');
-
     const finalFood = pickRandom();
     let count = 0, delay = 25;
-
     function spin() {
       const pool = FOOD_LIST.filter(f => f !== finalFood);
       foodEl.textContent = pool[Math.floor(Math.random() * pool.length)];
@@ -530,8 +749,8 @@
       } else {
         foodEl.classList.remove('spinning');
         foodEl.textContent = finalFood;
-        randomCurrentFood  = finalFood;
-        randomLastFood     = finalFood;
+        randomCurrentFood = finalFood;
+        randomLastFood    = finalFood;
         document.getElementById('randomNaverLink').href =
           'https://map.naver.com/v5/search/' + encodeURIComponent(finalFood);
         shareBtn.style.display = 'block';
@@ -552,12 +771,7 @@
     input.focus();
     renderTags();
   }
-
-  function removeItem(i) {
-    customItems.splice(i, 1);
-    renderTags();
-  }
-
+  function removeItem(i) { customItems.splice(i, 1); renderTags(); }
   function renderTags() {
     const n = customItems.length;
     document.getElementById('tagsWrap').innerHTML = customItems.map((item, i) =>
@@ -566,191 +780,124 @@
     document.getElementById('goSpinBtn').disabled = n < 2;
     document.getElementById('tagsHeader').style.display = n > 0 ? 'flex' : 'none';
     document.getElementById('tagsCount').textContent = '총 ' + n + '개';
-    // 아이템 없으면 확인창도 닫기
     if (n === 0) document.getElementById('deleteConfirm').style.display = 'none';
   }
-
-  function askDeleteAll() {
-    document.getElementById('deleteConfirm').style.display = 'flex';
-  }
-
-  function cancelDeleteAll() {
-    document.getElementById('deleteConfirm').style.display = 'none';
-  }
-
-  function confirmDeleteAll() {
-    customItems = [];
-    document.getElementById('deleteConfirm').style.display = 'none';
-    renderTags();
-  }
+  function askDeleteAll()    { document.getElementById('deleteConfirm').style.display = 'flex'; }
+  function cancelDeleteAll() { document.getElementById('deleteConfirm').style.display = 'none'; }
+  function confirmDeleteAll() { customItems = []; document.getElementById('deleteConfirm').style.display = 'none'; renderTags(); }
 
   /* ═══════════ 캔버스 룰렛 ═══════════ */
   function drawWheel() {
     const canvas = document.getElementById('wheelCanvas');
     if (!canvas || customItems.length === 0) return;
-    const ctx  = canvas.getContext('2d');
-    const n    = customItems.length;
+    const ctx = canvas.getContext('2d');
+    const n   = customItems.length;
     const size = canvas.width;
-    const R    = size / 2 - 8;
-    const cx   = size / 2;
-    const cy   = size / 2;
-    const arc  = (2 * Math.PI) / n;
+    const R  = size / 2 - 8;
+    const cx = size / 2, cy = size / 2;
+    const arc = (2 * Math.PI) / n;
     const fontSize = Math.max(10, Math.min(15, 60 / n + 6));
-
     ctx.clearRect(0, 0, size, size);
-
     customItems.forEach((item, i) => {
       const start = wheelRotation + i * arc;
       const end   = start + arc;
       const mid   = start + arc / 2;
-
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, R, start, end);
-      ctx.closePath();
-      ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length];
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.75)';
-      ctx.lineWidth   = 2;
-      ctx.stroke();
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(mid);
-      ctx.textAlign  = 'right';
-      ctx.fillStyle  = '#fff';
-      ctx.font       = `bold ${fontSize}px 'Apple SD Gothic Neo', sans-serif`;
-      ctx.shadowColor = 'rgba(0,0,0,0.35)';
-      ctx.shadowBlur  = 3;
-      const label = item.length > 6 ? item.slice(0, 5) + '…' : item;
-      ctx.fillText(label, R - 10, fontSize * 0.38);
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, R, start, end); ctx.closePath();
+      ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length]; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(mid);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
+      ctx.font = `bold ${fontSize}px 'Apple SD Gothic Neo', sans-serif`;
+      ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 3;
+      ctx.fillText(item.length > 6 ? item.slice(0,5)+'…' : item, R - 10, fontSize * 0.38);
       ctx.restore();
     });
-
-    // 중앙 원
-    ctx.beginPath();
-    ctx.arc(cx, cy, 14, 0, Math.PI * 2);
-    ctx.fillStyle   = '#fff';
-    ctx.shadowColor = 'rgba(0,0,0,0.1)';
-    ctx.shadowBlur  = 6;
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI*2);
+    ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,0.1)'; ctx.shadowBlur = 6; ctx.fill();
   }
-
   function spinWheel() {
     if (isWheelSpinning || customItems.length < 2) return;
     isWheelSpinning = true;
-
-    document.getElementById('wheelSpinBtn').disabled   = true;
+    document.getElementById('wheelSpinBtn').disabled = true;
     document.getElementById('wheelResult').style.display = 'none';
     if (document.getElementById('wheelRetryBtn'))
       document.getElementById('wheelRetryBtn').disabled = true;
-
-    const extraSpins    = (5 + Math.random() * 4) * 2 * Math.PI;
-    const randomOffset  = Math.random() * 2 * Math.PI;
-    const targetRotation = wheelRotation + extraSpins + randomOffset;
-    const duration      = 4000;
-    const startTime     = performance.now();
-    const startRotation = wheelRotation;
-
+    const target = wheelRotation + (5 + Math.random() * 4) * 2 * Math.PI + Math.random() * 2 * Math.PI;
+    const dur = 4000, t0 = performance.now(), r0 = wheelRotation;
     function animate(now) {
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased    = 1 - Math.pow(1 - progress, 4);
-      wheelRotation  = startRotation + (targetRotation - startRotation) * eased;
+      const p = Math.min((now - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 4);
+      wheelRotation = r0 + (target - r0) * e;
       drawWheel();
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        wheelRotation   = targetRotation;
-        isWheelSpinning = false;
-
-        // 당첨 계산: 포인터 = 상단(-π/2)
-        const n   = customItems.length;
-        const arc = 2 * Math.PI / n;
-        const rel = ((-Math.PI / 2 - wheelRotation) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-        const idx = Math.floor(rel / arc) % n;
-        wheelCurrentFood = customItems[idx];
-        showWheelResult(wheelCurrentFood);
-      }
+      if (p < 1) { requestAnimationFrame(animate); return; }
+      wheelRotation = target; isWheelSpinning = false;
+      const n   = customItems.length;
+      const arc = 2 * Math.PI / n;
+      const rel = ((-Math.PI/2 - wheelRotation) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+      wheelCurrentFood = customItems[Math.floor(rel / arc) % n];
+      showWheelResult(wheelCurrentFood);
     }
     requestAnimationFrame(animate);
   }
-
   function showWheelResult(food) {
     document.getElementById('wheelFood').textContent = food;
-    document.getElementById('wheelNaverLink').href   =
-      'https://map.naver.com/v5/search/' + encodeURIComponent(food);
-    document.getElementById('wheelSpinBtn').disabled   = false;
-    document.getElementById('wheelRetryBtn').disabled  = false;
-    const result = document.getElementById('wheelResult');
-    result.style.display = 'block';
-    result.classList.remove('fade-in');
-    void result.offsetWidth;
-    result.classList.add('fade-in');
+    document.getElementById('wheelNaverLink').href = 'https://map.naver.com/v5/search/' + encodeURIComponent(food);
+    document.getElementById('wheelSpinBtn').disabled  = false;
+    document.getElementById('wheelRetryBtn').disabled = false;
+    const r = document.getElementById('wheelResult');
+    r.style.display = 'block';
+    r.classList.remove('fade-in'); void r.offsetWidth; r.classList.add('fade-in');
   }
 
   /* ═══════════ 공유 ═══════════ */
   function shareResult(mode, btn) {
     const food = mode === 'random' ? randomCurrentFood : wheelCurrentFood;
     if (!food) return;
-    const emoji     = FOOD_EMOJI[food] || '🍽️';
-    const shareText = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + food + '\n' + window.location.href;
+    const emoji = FOOD_EMOJI[food] || '🍽️';
+    const text  = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + food + '\n' + window.location.href;
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareText)
-        .then(()    => showCopied(btn))
-        .catch(()   => fallbackCopy(shareText, btn));
-    } else {
-      fallbackCopy(shareText, btn);
-    }
+      navigator.clipboard.writeText(text).then(() => showCopied(btn)).catch(() => fallbackCopy(text, btn));
+    } else { fallbackCopy(text, btn); }
   }
-
   function fallbackCopy(text, btn) {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showCopied(btn);
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta); showCopied(btn);
   }
-
   function showCopied(btn) {
     const orig = btn.textContent;
-    btn.textContent   = '✅ 복사됐어요!';
-    btn.style.background = '#4caf50';
-    setTimeout(() => {
-      btn.textContent      = orig;
-      btn.style.background = '';
-    }, 2000);
+    btn.textContent = '✅ 복사됐어요!'; btn.style.background = '#4caf50';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
   }
 
-  /* ═══════════ 앱 연동 공통 ═══════════ */
+  /* ═══════════ 앱 연동 ═══════════ */
   function tryDeepLink(scheme, storeUrl) {
     const fallback = setTimeout(() => { window.location.href = storeUrl; }, 1500);
     document.addEventListener('visibilitychange', function handler() {
-      if (document.hidden) {
-        clearTimeout(fallback);
-        document.removeEventListener('visibilitychange', handler);
-      }
+      if (document.hidden) { clearTimeout(fallback); document.removeEventListener('visibilitychange', handler); }
     });
     window.location.href = scheme;
   }
-
   function openCoupangEats() {
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isAndroid)    tryDeepLink('coupangeats://', 'https://play.google.com/store/apps/details?id=com.coupang.eats');
-    else if (isIOS)   tryDeepLink('coupangeats://', 'https://apps.apple.com/kr/app/id1466980186');
-    else              window.open('https://www.coupangeats.com', '_blank');
+    const a = /Android/i.test(navigator.userAgent), i = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (a)      tryDeepLink('coupangeats://', 'https://play.google.com/store/apps/details?id=com.coupang.eats');
+    else if (i) tryDeepLink('coupangeats://', 'https://apps.apple.com/kr/app/id1466980186');
+    else        window.open('https://www.coupangeats.com', '_blank');
+  }
+  function openBaemin() {
+    const a = /Android/i.test(navigator.userAgent), i = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (a)      tryDeepLink('baemin://', 'https://play.google.com/store/apps/details?id=com.woowa.baemin');
+    else if (i) tryDeepLink('baemin://', 'https://apps.apple.com/kr/app/id827040276');
+    else        window.open('https://www.baemin.com', '_blank');
   }
 
-  function openBaemin() {
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isAndroid)    tryDeepLink('baemin://', 'https://play.google.com/store/apps/details?id=com.woowa.baemin');
-    else if (isIOS)   tryDeepLink('baemin://', 'https://apps.apple.com/kr/app/id827040276');
-    else              window.open('https://www.baemin.com', '_blank');
-  }
+  /* ═══════════ 모달 ═══════════ */
+  function showPrivacy()  { document.getElementById('privacyModal').classList.add('show'); }
+  function closePrivacy() { document.getElementById('privacyModal').classList.remove('show'); }
+  function showAbout()    { document.getElementById('aboutModal').classList.add('show'); }
+  function closeAbout()   { document.getElementById('aboutModal').classList.remove('show'); }
 </script>
 </body>
 </html>
