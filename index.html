@@ -41,7 +41,6 @@
       margin-bottom: 40px;
     }
 
-    /* 추천 버튼 */
     .recommend-btn {
       background: linear-gradient(135deg, #ff6b35, #ff4500);
       color: #fff;
@@ -59,11 +58,7 @@
     .recommend-btn:active { transform: translateY(0); }
     .recommend-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    /* 결과 영역 */
-    .result-section {
-      margin-top: 40px;
-      display: none;
-    }
+    .result-section { margin-top: 40px; display: none; }
     .result-section.visible { display: block; }
 
     @keyframes fadeIn {
@@ -72,13 +67,8 @@
     }
     .result-section.animate { animation: fadeIn 0.4s ease; }
 
-    .result-label {
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-bottom: 8px;
-    }
+    .result-label { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; }
 
-    /* 룰렛 중 흔들리는 효과 */
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       25%      { transform: translateX(-4px); }
@@ -99,7 +89,6 @@
       animation: shake 0.15s infinite;
     }
 
-    /* 다시 추첨 */
     .retry-btn {
       background: none;
       border: 2px solid #ff4500;
@@ -109,17 +98,16 @@
       font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       transition: background 0.15s, color 0.15s;
       letter-spacing: -0.3px;
     }
     .retry-btn:hover { background: #ff4500; color: #fff; }
     .retry-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* 공유 영역 */
-    .share-section {
-      margin-bottom: 20px;
-    }
+    /* 공유 버튼 — 룰렛 중 숨김 */
+    .share-section { margin-bottom: 20px; }
+    .share-section.hidden { display: none; }
     .share-btn {
       width: 100%;
       border: none;
@@ -128,42 +116,14 @@
       font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
+      background: #1a1a1a;
+      color: #fff;
       transition: transform 0.15s, box-shadow 0.15s;
       letter-spacing: -0.3px;
     }
-    .share-btn:hover { transform: translateY(-2px); }
+    .share-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
 
-    .btn-share {
-      background: #1a1a1a;
-      color: #fff;
-    }
-    .btn-share:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
-
-    /* 토스트 */
-    .toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a1a1a;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: opacity 0.25s, transform 0.25s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* 앱 연동 버튼 */
-    .link-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .link-buttons { display: flex; flex-direction: column; gap: 12px; }
     .link-btn {
       display: block;
       width: 100%;
@@ -178,22 +138,76 @@
       letter-spacing: -0.3px;
     }
     .link-btn:hover { transform: translateY(-2px); }
-
-    .btn-coupang {
-      background: #fee500;
-      color: #1a1a1a;
-      box-shadow: 0 4px 16px rgba(254,229,0,0.4);
-    }
+    .btn-coupang { background: #fee500; color: #1a1a1a; box-shadow: 0 4px 16px rgba(254,229,0,0.4); }
     .btn-coupang:hover { box-shadow: 0 6px 22px rgba(254,229,0,0.55); }
-
-    .btn-naver {
-      background: #03c75a;
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(3,199,90,0.3);
-    }
+    .btn-naver { background: #03c75a; color: #fff; box-shadow: 0 4px 16px rgba(3,199,90,0.3); }
     .btn-naver:hover { box-shadow: 0 6px 22px rgba(3,199,90,0.45); }
-
     .emoji-icon { margin-right: 6px; }
+
+    /* 공유 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 28px 24px 36px;
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 14px;
+    }
+    .modal-text {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.9rem;
+      color: #444;
+      line-height: 1.6;
+      word-break: break-all;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .modal-copy-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: #ff4500;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .modal-close-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background: #f0f0f0;
+      color: #666;
+      cursor: pointer;
+    }
+    .copy-done { background: #4caf50 !important; }
 
     @media (max-width: 480px) {
       .container { padding: 36px 24px; }
@@ -215,8 +229,8 @@
 
       <button class="retry-btn" id="retryBtn" onclick="startRoulette()">&#x1F501; 다시 추첨</button>
 
-      <div class="share-section" id="shareSection">
-        <button class="share-btn btn-share" onclick="shareResult()">&#x1F4E4; 친구에게 공유하기</button>
+      <div class="share-section hidden" id="shareSection">
+        <button class="share-btn" onclick="shareResult()">&#x1F4E4; 친구에게 공유하기</button>
       </div>
 
       <div class="link-buttons">
@@ -230,7 +244,15 @@
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <!-- 공유 모달 (navigator.share 미지원 환경용) -->
+  <div class="modal-overlay" id="shareModal" onclick="closeModal(event)">
+    <div class="modal">
+      <p class="modal-title">아래 텍스트를 복사해서 공유하세요!</p>
+      <div class="modal-text" id="shareModalText"></div>
+      <button class="modal-copy-btn" id="modalCopyBtn" onclick="copyShareText()">&#x1F4CB; 복사하기</button>
+      <button class="modal-close-btn" onclick="closeShareModal()">닫기</button>
+    </div>
+  </div>
 
   <script>
     const foodList = [
@@ -264,17 +286,16 @@
       if (isSpinning) return;
       isSpinning = true;
 
-      const btn = document.getElementById('recommendBtn');
+      const recommendBtn = document.getElementById('recommendBtn');
       const retryBtn = document.getElementById('retryBtn');
       const foodEl = document.getElementById('resultFood');
       const shareSection = document.getElementById('shareSection');
-
-      btn.disabled = true;
-      if (retryBtn) retryBtn.disabled = true;
-      shareSection.style.visibility = 'hidden';
-
-      // 결과 영역 바로 보여주고 룰렛 시작
       const resultSection = document.getElementById('resultSection');
+
+      recommendBtn.disabled = true;
+      retryBtn.disabled = true;
+      shareSection.classList.add('hidden');
+
       resultSection.classList.remove('animate');
       resultSection.classList.add('visible');
       foodEl.classList.add('spinning');
@@ -293,22 +314,18 @@
         if (count < totalSpins) {
           setTimeout(spin, delay);
         } else {
-          // 최종 결정
           foodEl.classList.remove('spinning');
           foodEl.textContent = finalFood;
           currentFood = finalFood;
           lastFood = finalFood;
 
-          // 링크 업데이트
           document.getElementById('naverLink').href =
             'https://map.naver.com/v5/search/' + encodeURIComponent(finalFood);
 
-          // 페이드인 애니메이션
           resultSection.classList.add('animate');
-
-          shareSection.style.visibility = 'visible';
-          btn.disabled = false;
-          if (retryBtn) retryBtn.disabled = false;
+          shareSection.classList.remove('hidden');
+          recommendBtn.disabled = false;
+          retryBtn.disabled = false;
           isSpinning = false;
         }
       }
@@ -321,42 +338,60 @@
       const emoji = foodEmoji[currentFood] || '🍽️';
       const text = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + ' 나옴ㅋㅋ 너도 해봐';
       const url = window.location.href;
-      const shareText = text + '\n' + url;
 
-      const isKakao = /KAKAOTALK/i.test(navigator.userAgent);
-
-      if (!isKakao && navigator.share) {
+      if (navigator.share) {
         navigator.share({ title: '오늘 뭐 먹지?', text: text, url: url })
-          .catch(function() {});
+          .catch(function(err) {
+            // 사용자가 취소한 경우가 아닐 때만 모달
+            if (err.name !== 'AbortError') openShareModal(text, url);
+          });
       } else {
-        // 카카오톡 인앱 브라우저 또는 미지원 — 클립보드 복사
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(shareText).then(function() {
-            showToast('링크 복사됐어요! 카톡에 붙여넣기 하세요 😊');
-          }).catch(function() { fallbackCopy(shareText); });
-        } else {
-          fallbackCopy(shareText);
-        }
+        openShareModal(text, url);
       }
     }
 
-    function fallbackCopy(text) {
+    function openShareModal(text, url) {
+      const shareText = text + '\n' + url;
+      document.getElementById('shareModalText').textContent = shareText;
+      document.getElementById('shareModal').classList.add('show');
+      document.getElementById('modalCopyBtn').textContent = '📋 복사하기';
+      document.getElementById('modalCopyBtn').classList.remove('copy-done');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareModal').classList.remove('show');
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('shareModal')) closeShareModal();
+    }
+
+    function copyShareText() {
+      const text = document.getElementById('shareModalText').textContent;
+      const btn = document.getElementById('modalCopyBtn');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() {
+          btn.textContent = '✅ 복사됐어요!';
+          btn.classList.add('copy-done');
+        }).catch(function() { fallbackCopy(text, btn); });
+      } else {
+        fallbackCopy(text, btn);
+      }
+    }
+
+    function fallbackCopy(text, btn) {
       const ta = document.createElement('textarea');
       ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
       document.body.appendChild(ta);
+      ta.focus();
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      showToast('링크 복사됐어요! 카톡에 붙여넣기 하세요 😊');
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(function() { toast.classList.remove('show'); }, 2800);
+      if (btn) {
+        btn.textContent = '✅ 복사됐어요!';
+        btn.classList.add('copy-done');
+      }
     }
 
     function openCoupangEats() {
