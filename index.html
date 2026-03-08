@@ -142,71 +142,6 @@
     .btn-naver:hover { box-shadow: 0 6px 22px rgba(3,199,90,0.45); }
     .emoji-icon { margin-right: 6px; }
 
-    /* 공유 모달 */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 100;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal {
-      background: #fff;
-      border-radius: 20px 20px 0 0;
-      padding: 28px 24px 36px;
-      width: 100%;
-      max-width: 480px;
-      animation: slideUp 0.25s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to   { transform: translateY(0); }
-    }
-    .modal-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 14px;
-    }
-    .modal-text {
-      background: #f5f5f5;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.9rem;
-      color: #444;
-      line-height: 1.6;
-      word-break: break-all;
-      margin-bottom: 14px;
-      text-align: left;
-    }
-    .modal-copy-btn {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      background: #ff4500;
-      color: #fff;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-    .modal-close-btn {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      background: #f0f0f0;
-      color: #666;
-      cursor: pointer;
-    }
-    .copy-done { background: #4caf50 !important; }
-
     @media (max-width: 480px) {
       .container { padding: 36px 24px; }
       .title { font-size: 2rem; }
@@ -239,16 +174,6 @@
           <span class="emoji-icon">&#x1F4CD;</span>네이버 지도에서 보기
         </a>
       </div>
-    </div>
-  </div>
-
-  <!-- 공유 모달 (navigator.share 미지원 환경용) -->
-  <div class="modal-overlay" id="shareModal" onclick="closeModal(event)">
-    <div class="modal">
-      <p class="modal-title">아래 텍스트를 복사해서 공유하세요!</p>
-      <div class="modal-text" id="shareModalText"></div>
-      <button class="modal-copy-btn" id="modalCopyBtn" onclick="copyShareText()">&#x1F4CB; 복사하기</button>
-      <button class="modal-close-btn" onclick="closeShareModal()">닫기</button>
     </div>
   </div>
 
@@ -334,46 +259,15 @@
     function shareResult() {
       if (!currentFood) return;
       const emoji = foodEmoji[currentFood] || '🍽️';
-      const text = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + ' 나옴ㅋㅋ 너도 해봐';
-      const url = window.location.href;
+      const shareText = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + '\n' + window.location.href;
+      const btn = document.querySelector('.share-btn');
 
-      if (navigator.share) {
-        navigator.share({ title: '오늘 뭐 먹지?', text: text, url: url })
-          .catch(function(err) {
-            // 사용자가 취소한 경우가 아닐 때만 모달
-            if (err.name !== 'AbortError') openShareModal(text, url);
-          });
-      } else {
-        openShareModal(text, url);
-      }
-    }
-
-    function openShareModal(text, url) {
-      const shareText = text + '\n' + url;
-      document.getElementById('shareModalText').textContent = shareText;
-      document.getElementById('shareModal').classList.add('show');
-      document.getElementById('modalCopyBtn').textContent = '📋 복사하기';
-      document.getElementById('modalCopyBtn').classList.remove('copy-done');
-    }
-
-    function closeShareModal() {
-      document.getElementById('shareModal').classList.remove('show');
-    }
-
-    function closeModal(e) {
-      if (e.target === document.getElementById('shareModal')) closeShareModal();
-    }
-
-    function copyShareText() {
-      const text = document.getElementById('shareModalText').textContent;
-      const btn = document.getElementById('modalCopyBtn');
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(function() {
-          btn.textContent = '✅ 복사됐어요!';
-          btn.classList.add('copy-done');
-        }).catch(function() { fallbackCopy(text, btn); });
+        navigator.clipboard.writeText(shareText).then(function() {
+          showCopied(btn);
+        }).catch(function() { fallbackCopy(shareText, btn); });
       } else {
-        fallbackCopy(text, btn);
+        fallbackCopy(shareText, btn);
       }
     }
 
@@ -386,10 +280,17 @@
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      if (btn) {
-        btn.textContent = '✅ 복사됐어요!';
-        btn.classList.add('copy-done');
-      }
+      showCopied(btn);
+    }
+
+    function showCopied(btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✅ 복사됐어요!';
+      btn.style.background = '#4caf50';
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.style.background = '';
+      }, 2000);
     }
 
     function openCoupangEats() {
