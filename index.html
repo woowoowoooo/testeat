@@ -105,9 +105,7 @@
     .retry-btn:hover { background: #ff4500; color: #fff; }
     .retry-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* 공유 버튼 — 룰렛 중 숨김 */
     .share-section { margin-bottom: 20px; }
-    .share-section.hidden { display: none; }
     .share-btn {
       width: 100%;
       border: none;
@@ -229,7 +227,7 @@
 
       <button class="retry-btn" id="retryBtn" onclick="startRoulette()">&#x1F501; 다시 추첨</button>
 
-      <div class="share-section hidden" id="shareSection">
+      <div class="share-section" id="shareSection" style="display:none">
         <button class="share-btn" onclick="shareResult()">&#x1F4E4; 친구에게 공유하기</button>
       </div>
 
@@ -294,7 +292,7 @@
 
       recommendBtn.disabled = true;
       retryBtn.disabled = true;
-      shareSection.classList.add('hidden');
+      shareSection.style.display = 'none';
 
       resultSection.classList.remove('animate');
       resultSection.classList.add('visible');
@@ -323,7 +321,7 @@
             'https://map.naver.com/v5/search/' + encodeURIComponent(finalFood);
 
           resultSection.classList.add('animate');
-          shareSection.classList.remove('hidden');
+          shareSection.style.display = 'block';
           recommendBtn.disabled = false;
           retryBtn.disabled = false;
           isSpinning = false;
