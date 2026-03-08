@@ -234,20 +234,30 @@
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
       if (isAndroid) {
-        // Android: intent URL — 앱 없으면 플레이스토어로 폴백
-        window.location.href =
-          'intent://search?keyword=' + encoded +
-          '#Intent;scheme=coupangeats;package=com.coupang.eats;' +
-          'S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.coupang.eats;end';
-      } else if (isIOS) {
-        // iOS: 앱 스킴 시도 후 1.5초 내 반응 없으면 앱스토어로 이동
+        const storeUrl = 'https://play.google.com/store/apps/details?id=com.coupang.eats';
         const fallback = setTimeout(function () {
-          window.location.href = 'https://apps.apple.com/kr/app/id1466980186';
+          window.location.href = storeUrl;
         }, 1500);
-        window.addEventListener('blur', function () { clearTimeout(fallback); }, { once: true });
+        document.addEventListener('visibilitychange', function handler() {
+          if (document.hidden) {
+            clearTimeout(fallback);
+            document.removeEventListener('visibilitychange', handler);
+          }
+        });
+        window.location.href = 'coupangeats://search?keyword=' + encoded;
+      } else if (isIOS) {
+        const storeUrl = 'https://apps.apple.com/kr/app/id1466980186';
+        const fallback = setTimeout(function () {
+          window.location.href = storeUrl;
+        }, 1500);
+        document.addEventListener('visibilitychange', function handler() {
+          if (document.hidden) {
+            clearTimeout(fallback);
+            document.removeEventListener('visibilitychange', handler);
+          }
+        });
         window.location.href = 'coupangeats://search?keyword=' + encoded;
       } else {
-        // 데스크탑은 웹으로 폴백
         window.open('https://www.coupangeats.com/search?q=' + encoded, '_blank');
       }
     }
