@@ -110,8 +110,9 @@
       font-family: inherit;
     }
     .link-btn:hover { transform: translateY(-2px); }
-    .btn-coupang { background: #fee500; color: #1a1a1a; box-shadow: 0 4px 14px rgba(254,229,0,0.4); }
-    .btn-naver   { background: #03c75a; color: #fff;    box-shadow: 0 4px 14px rgba(3,199,90,0.3); }
+    .btn-coupang { background: #31b4dd; color: #fff; box-shadow: 0 4px 14px rgba(49,180,221,0.4); }
+    .btn-baemin  { background: #2ac1bc; color: #fff; box-shadow: 0 4px 14px rgba(42,193,188,0.4); }
+    .btn-naver   { background: #03c75a; color: #fff; box-shadow: 0 4px 14px rgba(3,199,90,0.3); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -286,7 +287,7 @@
     <h1 class="home-title">오늘 뭐 먹지?</h1>
     <p class="home-sub">배고프면 눌러</p>
     <div class="mode-grid">
-      <div class="mode-card card-random" onclick="showRandomScreen()">
+      <div class="mode-card card-random" onclick="goRandomAndSpin()">
         <div class="mode-icon">🎲</div>
         <div class="mode-title">추천 받기</div>
         <div class="mode-desc">메뉴 고르기 귀찮을 땐 저한테 맡겨요</div>
@@ -302,14 +303,14 @@
   <!-- ② 랜덤 추천 -->
   <div id="randomScreen" class="screen">
     <button class="back-btn" onclick="showHome()">← 뒤로</button>
-    <button class="big-btn" id="randomSpinBtn" onclick="startRoulette()">🎲 추천 받기</button>
-    <div id="randomResult" style="display:none">
+    <div id="randomResult">
       <p class="result-label">오늘의 추천 메뉴</p>
       <div class="result-food" id="randomFood"></div>
       <button class="retry-btn" id="randomRetryBtn" onclick="startRoulette()">🔁 다시 추첨</button>
       <button class="share-btn" id="randomShareBtn" onclick="shareResult('random', this)" style="display:none">📤 공유하기</button>
       <div class="link-buttons">
         <button class="link-btn btn-coupang" onclick="openCoupangEats()">🛵 쿠팡이츠에서 주문하기</button>
+        <button class="link-btn btn-baemin" onclick="openBaemin()">🛵 배민에서 주문하기</button>
         <a class="link-btn btn-naver" id="randomNaverLink" href="#" target="_blank" rel="noopener">📍 네이버 지도에서 보기</a>
       </div>
     </div>
@@ -344,6 +345,7 @@
       <button class="share-btn" onclick="shareResult('wheel', this)">📤 공유하기</button>
       <div class="link-buttons">
         <button class="link-btn btn-coupang" onclick="openCoupangEats()">🛵 쿠팡이츠에서 주문하기</button>
+        <button class="link-btn btn-baemin" onclick="openBaemin()">🛵 배민에서 주문하기</button>
         <a class="link-btn btn-naver" id="wheelNaverLink" href="#" target="_blank" rel="noopener">📍 네이버 지도에서 보기</a>
       </div>
     </div>
@@ -390,10 +392,13 @@
   function showHome() { showScreen('homeScreen'); }
 
   function showRandomScreen() {
-    document.getElementById('randomResult').style.display = 'none';
-    document.getElementById('randomSpinBtn').disabled = false;
     isRandomSpinning = false;
     showScreen('randomScreen');
+  }
+
+  function goRandomAndSpin() {
+    showRandomScreen();
+    startRoulette();
   }
 
   function showSetupScreen() { showScreen('setupScreen'); }
@@ -418,16 +423,12 @@
     if (isRandomSpinning) return;
     isRandomSpinning = true;
 
-    const spinBtn  = document.getElementById('randomSpinBtn');
     const retryBtn = document.getElementById('randomRetryBtn');
     const shareBtn = document.getElementById('randomShareBtn');
     const foodEl   = document.getElementById('randomFood');
-    const result   = document.getElementById('randomResult');
 
-    spinBtn.disabled  = true;
     retryBtn.disabled = true;
     shareBtn.style.display = 'none';
-    result.style.display   = 'block';
     foodEl.classList.add('spinning');
 
     const finalFood = pickRandom();
@@ -448,7 +449,6 @@
         document.getElementById('randomNaverLink').href =
           'https://map.naver.com/v5/search/' + encodeURIComponent(finalFood);
         shareBtn.style.display = 'block';
-        spinBtn.disabled  = false;
         retryBtn.disabled = false;
         isRandomSpinning  = false;
       }
@@ -619,25 +619,32 @@
     }, 2000);
   }
 
-  /* ═══════════ 쿠팡이츠 ═══════════ */
+  /* ═══════════ 앱 연동 공통 ═══════════ */
+  function tryDeepLink(scheme, storeUrl) {
+    const fallback = setTimeout(() => { window.location.href = storeUrl; }, 1500);
+    document.addEventListener('visibilitychange', function handler() {
+      if (document.hidden) {
+        clearTimeout(fallback);
+        document.removeEventListener('visibilitychange', handler);
+      }
+    });
+    window.location.href = scheme;
+  }
+
   function openCoupangEats() {
     const isAndroid = /Android/i.test(navigator.userAgent);
     const isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    function tryDeepLink(scheme, storeUrl) {
-      const fallback = setTimeout(() => { window.location.href = storeUrl; }, 1500);
-      document.addEventListener('visibilitychange', function handler() {
-        if (document.hidden) {
-          clearTimeout(fallback);
-          document.removeEventListener('visibilitychange', handler);
-        }
-      });
-      window.location.href = scheme;
-    }
-
     if (isAndroid)    tryDeepLink('coupangeats://', 'https://play.google.com/store/apps/details?id=com.coupang.eats');
     else if (isIOS)   tryDeepLink('coupangeats://', 'https://apps.apple.com/kr/app/id1466980186');
     else              window.open('https://www.coupangeats.com', '_blank');
+  }
+
+  function openBaemin() {
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isAndroid)    tryDeepLink('baemin://', 'https://play.google.com/store/apps/details?id=com.woowa.baemin');
+    else if (isIOS)   tryDeepLink('baemin://', 'https://apps.apple.com/kr/app/id827040276');
+    else              window.open('https://www.baemin.com', '_blank');
   }
 </script>
 </body>
