@@ -119,15 +119,13 @@
     /* 공유 영역 */
     .share-section {
       margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
     }
     .share-btn {
-      flex: 1;
+      width: 100%;
       border: none;
       border-radius: 12px;
-      padding: 13px 8px;
-      font-size: 0.88rem;
+      padding: 14px;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
@@ -135,39 +133,11 @@
     }
     .share-btn:hover { transform: translateY(-2px); }
 
-    .btn-copy {
-      background: #f0f0f0;
-      color: #333;
-    }
-    .btn-copy:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-
     .btn-share {
       background: #1a1a1a;
       color: #fff;
     }
     .btn-share:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
-
-    /* 복사 완료 토스트 */
-    .toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a1a1a;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: opacity 0.25s, transform 0.25s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
 
     /* 앱 연동 버튼 */
     .link-buttons {
@@ -227,8 +197,7 @@
       <button class="retry-btn" id="retryBtn" onclick="startRoulette()">&#x1F501; 다시 추첨</button>
 
       <div class="share-section" id="shareSection">
-        <button class="share-btn btn-copy" onclick="copyLink()">&#x1F517; 링크 복사</button>
-        <button class="share-btn btn-share" onclick="shareResult()">&#x1F4E4; 친구에게 공유</button>
+        <button class="share-btn btn-share" onclick="shareResult()">&#x1F4E4; 친구에게 공유하기</button>
       </div>
 
       <div class="link-buttons">
@@ -241,8 +210,6 @@
       </div>
     </div>
   </div>
-
-  <div class="toast" id="toast">링크가 복사됐어요!</div>
 
   <script>
     const foodList = [
@@ -293,15 +260,14 @@
 
       const finalFood = pickFood();
       let count = 0;
-      const totalSpins = 14;
-      let delay = 70;
+      const totalSpins = 15;
+      let delay = 40;
 
       function spin() {
-        // 최종 직전 2번은 파이널 음식과 인접한 것들로 느리게
         const pool = foodList.filter(f => f !== finalFood);
         foodEl.textContent = pool[Math.floor(Math.random() * pool.length)];
         count++;
-        delay = Math.min(delay * 1.18, 320);
+        delay = Math.min(delay * 1.15, 300);
 
         if (count < totalSpins) {
           setTimeout(spin, delay);
@@ -336,44 +302,11 @@
       const url = window.location.href;
 
       if (navigator.share) {
-        navigator.share({ title: '오늘 뭐 먹지?', text: text, url: url });
+        navigator.share({ title: '오늘 뭐 먹지?', text: text, url: url })
+          .catch(function() {});
       } else {
-        copyToClipboard(text + '\n' + url);
-        showToast('공유 텍스트가 복사됐어요!');
+        alert('이 브라우저는 공유 기능을 지원하지 않아요.\n모바일에서 접속해보세요!');
       }
-    }
-
-    function copyLink() {
-      const emoji = foodEmoji[currentFood] || '🍽️';
-      const text = '오늘 뭐 먹지? 추천 결과 ' + emoji + ' ' + currentFood + ' 나옴ㅋㅋ 너도 해봐\n' + window.location.href;
-      copyToClipboard(text);
-      showToast('링크가 복사됐어요!');
-    }
-
-    function copyToClipboard(text) {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).catch(function() { fallbackCopy(text); });
-      } else {
-        fallbackCopy(text);
-      }
-    }
-
-    function fallbackCopy(text) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(function() { toast.classList.remove('show'); }, 2000);
     }
 
     function openCoupangEats() {
