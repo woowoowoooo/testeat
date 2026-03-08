@@ -205,10 +205,29 @@
     }
 
     function openCoupangEats() {
-      if (!currentFood) return;
-      const encoded = encodeURIComponent(currentFood);
-// HTTPS 유니버설 링크 — 앱 설치 시 앱 내 검색으로, 없으면 모바일 웹으로
-      window.location.href = 'https://www.coupangeats.com/search?q=' + encoded;
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      function tryDeepLink(scheme, storeUrl) {
+        const fallback = setTimeout(function () {
+          window.location.href = storeUrl;
+        }, 1500);
+        document.addEventListener('visibilitychange', function handler() {
+          if (document.hidden) {
+            clearTimeout(fallback);
+            document.removeEventListener('visibilitychange', handler);
+          }
+        });
+        window.location.href = scheme;
+      }
+
+      if (isAndroid) {
+        tryDeepLink('coupangeats://', 'https://play.google.com/store/apps/details?id=com.coupang.eats');
+      } else if (isIOS) {
+        tryDeepLink('coupangeats://', 'https://apps.apple.com/kr/app/id1466980186');
+      } else {
+        window.open('https://www.coupangeats.com', '_blank');
+      }
     }
   </script>
 </body>
