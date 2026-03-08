@@ -1,14 +1,255 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>오늘 뭐 먹지?</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #fff5f0 0%, #ffe4d6 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 48px 36px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #999;
+      margin-bottom: 40px;
+    }
+
+    .recommend-btn {
+      background: linear-gradient(135deg, #ff6b35, #ff4500);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 18px 48px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+      letter-spacing: -0.5px;
+    }
+
+    .recommend-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 107, 53, 0.5);
+    }
+
+    .recommend-btn:active {
+      transform: translateY(0px);
+    }
+
+    .result-section {
+      margin-top: 40px;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .result-section.visible {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    .result-food {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #ff4500;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 20px 0;
+    }
+
+    .location-text {
+      font-size: 0.82rem;
+      color: #bbb;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .location-text.granted {
+      color: #4caf50;
+    }
+
+    .link-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-btn {
+      display: block;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      letter-spacing: -0.3px;
+    }
+
+    .link-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-coupang {
+      background: #fee500;
+      color: #1a1a1a;
+      box-shadow: 0 4px 16px rgba(254, 229, 0, 0.4);
+    }
+
+    .btn-coupang:hover {
+      box-shadow: 0 6px 22px rgba(254, 229, 0, 0.55);
+    }
+
+    .btn-naver {
+      background: #03c75a;
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(3, 199, 90, 0.3);
+    }
+
+    .btn-naver:hover {
+      box-shadow: 0 6px 22px rgba(3, 199, 90, 0.45);
+    }
+
+    .emoji-icon {
+      margin-right: 6px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 36px 24px;
+      }
+      .title {
+        font-size: 2rem;
+      }
+      .result-food {
+        font-size: 2.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <div class="container">
+    <h1 class="title">오늘 뭐 먹지?</h1>
+    <p class="subtitle">메뉴 고르기 귀찮을 땐 저한테 맡겨요</p>
+
+    <button class="recommend-btn" onclick="recommend()">추천 받기</button>
+
+    <div class="result-section" id="resultSection">
+      <p class="result-label">오늘의 추천 메뉴</p>
+      <div class="result-food" id="resultFood"></div>
+
+      <hr class="divider" />
+
+      <p class="location-text" id="locationText">위치 정보를 불러오는 중...</p>
+
+      <div class="link-buttons">
+        <a class="link-btn btn-coupang" id="coupangLink" href="#" target="_blank" rel="noopener">
+          <span class="emoji-icon">&#x1F6F5;</span>쿠팡이츠에서 주문하기
+        </a>
+        <a class="link-btn btn-naver" id="naverLink" href="#" target="_blank" rel="noopener">
+          <span class="emoji-icon">&#x1F4CD;</span>네이버 지도에서 보기
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const foodList = [
+      '삼겹살', '치킨', '피자', '햄버거', '마라탕',
+      '떡볶이', '초밥', '국밥', '돈까스', '쌀국수',
+      '파스타', '라멘'
+    ];
+
+    function recommend() {
+      const food = foodList[Math.floor(Math.random() * foodList.length)];
+
+      document.getElementById('resultFood').textContent = food;
+
+      const encodedFood = encodeURIComponent(food);
+      document.getElementById('coupangLink').href =
+        'https://www.coupangeats.com/search?q=' + encodedFood;
+      document.getElementById('naverLink').href =
+        'https://map.naver.com/v5/search/' + encodedFood;
+
+      const resultSection = document.getElementById('resultSection');
+      resultSection.classList.remove('visible');
+      void resultSection.offsetWidth;
+      resultSection.classList.add('visible');
+
+      requestLocation();
+    }
+
+    function requestLocation() {
+      const locationText = document.getElementById('locationText');
+
+      if (!navigator.geolocation) {
+        locationText.textContent = '이 브라우저는 위치 기능을 지원하지 않습니다.';
+        locationText.classList.remove('granted');
+        return;
+      }
+
+      locationText.textContent = '위치 정보를 불러오는 중...';
+      locationText.classList.remove('granted');
+
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          locationText.textContent =
+            '현재 위치 기반으로 주변 음식점을 찾아볼 수 있습니다.';
+          locationText.classList.add('granted');
+        },
+        function () {
+          locationText.textContent =
+            '위치 권한이 없어 현재 위치를 사용할 수 없습니다.';
+          locationText.classList.remove('granted');
+        }
+      );
+    }
+  </script>
 </body>
 </html>
