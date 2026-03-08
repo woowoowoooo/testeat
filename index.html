@@ -93,26 +93,9 @@
       font-size: 3rem;
       font-weight: 900;
       color: #ff4500;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       letter-spacing: -1px;
       line-height: 1.1;
-    }
-
-    .divider {
-      border: none;
-      border-top: 1px solid #f0f0f0;
-      margin: 20px 0;
-    }
-
-    .location-text {
-      font-size: 0.82rem;
-      color: #bbb;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
-    .location-text.granted {
-      color: #4caf50;
     }
 
     .link-buttons {
@@ -187,12 +170,8 @@
       <p class="result-label">오늘의 추천 메뉴</p>
       <div class="result-food" id="resultFood"></div>
 
-      <hr class="divider" />
-
-      <p class="location-text" id="locationText">위치 정보를 불러오는 중...</p>
-
       <div class="link-buttons">
-        <button class="link-btn btn-coupang" id="coupangLink" onclick="openCoupangEats()">
+        <button class="link-btn btn-coupang" onclick="openCoupangEats()">
           <span class="emoji-icon">&#x1F6F5;</span>쿠팡이츠에서 주문하기
         </button>
         <a class="link-btn btn-naver" id="naverLink" href="#" target="_blank" rel="noopener">
@@ -209,12 +188,13 @@
       '파스타', '라멘'
     ];
 
+    let currentFood = '';
+
     function recommend() {
-      const food = foodList[Math.floor(Math.random() * foodList.length)];
+      currentFood = foodList[Math.floor(Math.random() * foodList.length)];
+      document.getElementById('resultFood').textContent = currentFood;
 
-      document.getElementById('resultFood').textContent = food;
-
-      const encodedFood = encodeURIComponent(food);
+      const encodedFood = encodeURIComponent(currentFood);
       document.getElementById('naverLink').href =
         'https://map.naver.com/v5/search/' + encodedFood;
 
@@ -222,70 +202,43 @@
       resultSection.classList.remove('visible');
       void resultSection.offsetWidth;
       resultSection.classList.add('visible');
-
-      requestLocation();
     }
 
     function openCoupangEats() {
-      const food = document.getElementById('resultFood').textContent;
-      if (!food) return;
-      const encoded = encodeURIComponent(food);
+      if (!currentFood) return;
+      const encoded = encodeURIComponent(currentFood);
       const isAndroid = /Android/i.test(navigator.userAgent);
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+      // 딥링크 시도 후, 앱이 열리면 visibilitychange로 타이머 취소
+      // 앱이 없으면 1.5초 후 스토어로 이동
+      function tryDeepLink(scheme, storeUrl) {
+        const fallback = setTimeout(function () {
+          window.location.href = storeUrl;
+        }, 1500);
+        document.addEventListener('visibilitychange', function handler() {
+          if (document.hidden) {
+            clearTimeout(fallback);
+            document.removeEventListener('visibilitychange', handler);
+          }
+        });
+        window.location.href = scheme;
+      }
+
       if (isAndroid) {
-        const storeUrl = 'https://play.google.com/store/apps/details?id=com.coupang.eats';
-        const fallback = setTimeout(function () {
-          window.location.href = storeUrl;
-        }, 1500);
-        document.addEventListener('visibilitychange', function handler() {
-          if (document.hidden) {
-            clearTimeout(fallback);
-            document.removeEventListener('visibilitychange', handler);
-          }
-        });
-        window.location.href = 'coupangeats://search?keyword=' + encoded;
+        // q= 파라미터로 검색 결과 페이지 직행
+        tryDeepLink(
+          'coupangeats://search?q=' + encoded,
+          'https://play.google.com/store/apps/details?id=com.coupang.eats'
+        );
       } else if (isIOS) {
-        const storeUrl = 'https://apps.apple.com/kr/app/id1466980186';
-        const fallback = setTimeout(function () {
-          window.location.href = storeUrl;
-        }, 1500);
-        document.addEventListener('visibilitychange', function handler() {
-          if (document.hidden) {
-            clearTimeout(fallback);
-            document.removeEventListener('visibilitychange', handler);
-          }
-        });
-        window.location.href = 'coupangeats://search?keyword=' + encoded;
+        tryDeepLink(
+          'coupangeats://search?q=' + encoded,
+          'https://apps.apple.com/kr/app/id1466980186'
+        );
       } else {
         window.open('https://www.coupangeats.com/search?q=' + encoded, '_blank');
       }
-    }
-
-    function requestLocation() {
-      const locationText = document.getElementById('locationText');
-
-      if (!navigator.geolocation) {
-        locationText.textContent = '이 브라우저는 위치 기능을 지원하지 않습니다.';
-        locationText.classList.remove('granted');
-        return;
-      }
-
-      locationText.textContent = '위치 정보를 불러오는 중...';
-      locationText.classList.remove('granted');
-
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          locationText.textContent =
-            '현재 위치 기반으로 주변 음식점을 찾아볼 수 있습니다.';
-          locationText.classList.add('granted');
-        },
-        function () {
-          locationText.textContent =
-            '위치 권한이 없어 현재 위치를 사용할 수 없습니다.';
-          locationText.classList.remove('granted');
-        }
-      );
     }
   </script>
 </body>
